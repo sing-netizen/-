@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地板/软式曲棍球点名系统</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', 'Microsoft JhengHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(to right, #1a2a6c, #b21f1f);
+            color: white;
+            text-align: center;
+            padding: 25px 20px;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+        
+        .hockey-icon {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2.5rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .info-section {
+            padding: 20px;
+            background-color: #f0f5ff;
+            border-bottom: 2px solid #d0d8e8;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .info-box {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .info-box h3 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #e0e6f0;
+            padding-bottom: 5px;
+        }
+        
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: white;
+            font-size: 1rem;
+            margin-top: 5px;
+            transition: border-color 0.3s;
+        }
+        
+        select:focus {
+            border-color: #1a2a6c;
+            outline: none;
+            box-shadow: 0 0 5px rgba(26, 42, 108, 0.5);
+        }
+        
+        .attendance-section {
+            padding: 20px;
+        }
+        
+        .section-title {
+            background: linear-gradient(to right, #1a2a6c, #b21f1f);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-size: 1.3rem;
+        }
+        
+        .attendance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+        }
+        
+        .attendance-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s;
+        }
+        
+        .attendance-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .player-number {
+            background-color: #1a2a6c;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .player-name {
+            flex-grow: 1;
+            font-weight: bold;
+        }
+        
+        .status-select {
+            width: 100px;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        
+        .status-select option {
+            padding: 5px;
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 25px 20px;
+            background-color: #f0f5ff;
+            border-top: 2px solid #d0d8e8;
+        }
+        
+        .btn {
+            padding: 14px 35px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-submit {
+            background: linear-gradient(to right, #28a745, #1e7e34);
+            color: white;
+            box-shadow: 0 4px 8px rgba(40, 167, 69, 0.4);
+        }
+        
+        .btn-print {
+            background: linear-gradient(to right, #007bff, #0056b3);
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.4);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .status-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+        }
+        
+        .dot-yes { background-color: #28a745; }
+        .dot-abs { background-color: #ffc107; }
+        .dot-o { background-color: #dc3545; }
+        .dot-l { background-color: #17a2b8; }
+        .dot-s { background-color: #6f42c1; }
+        .dot-c { background-color: #007bff; }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 0 0 15px 15px;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                max-width: 100%;
+                box-shadow: none;
+                margin: 0;
+            }
+            
+            .btn, .hockey-icon, footer {
+                display: none;
+            }
+            
+            .info-section, .attendance-section {
+                padding: 10px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .attendance-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .button-group {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <i class="fas fa-hockey-puck hockey-icon"></i>
+            <h1>地板/软式曲棍球技术改良训练班</h1>
+            <div class="subtitle">球員點名系統 | 教練管理系統</div>
+        </header>
+        
+        <div class="info-section">
+            <div class="info-grid">
+                <div class="info-box">
+                    <h3><i class="fas fa-clock"></i> 訓練時間</h3>
+                    <p>星期一、六 (18:00-20:00)</p>
+                </div>
+                
+                <div class="info-box">
+                    <h3><i class="fas fa-map-marker-alt"></i> 訓練地點</h3>
+                    <select id="location">
+                        <option value="">-- 請選擇體育館 --</option>
+                        <option value="kowloon">九龍灣體育館</option>
+                        <option value="hungHom">紅磡市政大廈體育館</option>
+                        <option value="east">港島東體育館</option>
+                    </select>
+                </div>
+                
+                <div class="info-box">
+                    <h3><i class="fas fa-users"></i> 教練組合</h3>
+                    <select id="coach-combination">
+                        <option value="">-- 請選擇教練組合 --</option>
+                        <option value="peng-he">彭家威丶何家瑩</option>
+                        <option value="he-he">何昌恆丶何家瑩</option>
+                        <option value="peng">彭家威</option>
+                        <option value="he">何昌恆</option>
+                        <option value="ho">何家瑩</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div class="attendance-section">
+            <div class="section-title">
+                <i class="fas fa-user-friends"></i> 運動員名單 (共13人)
+            </div>
+            
+            <div class="attendance-grid" id="athletes-list">
+                <!-- Athletes will be generated here -->
+            </div>
+            
+            <div class="section-title">
+                <i class="fas fa-hands-helping"></i> 融合伙伴名單 (共6人)
+            </div>
+            
+            <div class="attendance-grid" id="partners-list">
+                <!-- Partners will be generated here -->
+            </div>
+            
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="status-dot dot-yes"></div>
+                    <span>Yes: 出席</span>
+                </div>
+                <div class="legend-item">
+                    <div class="status-dot dot-abs"></div>
+                    <span>Abs: 請假</span>
+                </div>
+                <div class="legend-item">
+                    <div class="status-dot dot-o"></div>
+                    <span>O: 無故缺席</span>
+                </div>
+                <div class="legend-item">
+                    <div class="status-dot dot-l"></div>
+                    <span>L: 遲到</span>
+                </div>
+                <div class="legend-item">
+                    <div class="status-dot dot-s"></div>
+                    <span>S: 病假</span>
+                </div>
+                <div class="legend-item">
+                    <div class="status-dot dot-c"></div>
+                    <span>C: 出外比賽</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="button-group">
+            <button class="btn btn-submit" onclick="submitAttendance()">
+                <i class="fas fa-check-circle"></i> 提交點名
+            </button>
+            <button class="btn btn-print" onclick="window.print()">
+                <i class="fas fa-print"></i> 印刷保存
+            </button>
+        </div>
+        
+        <footer>
+            <p>© 2023 地板/软式曲棍球技术改良训练班 | 教练: 彭家威丶何昌恆丶何家瑩丶黃柏強</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Athletes list
+        const athletes = [
+            "羅翹鋒", "陳卓謙", "林日朗", "李浩生", "陳文輝", 
+            "陳文傑", "李穎駿", "呂家華", "林志忠", "曹俊業", 
+            "何子鵬", "吳國浩", "石振星"
+        ];
+        
+        // Partners list
+        const partners = [
+            "陳考熒", "麥偉俊", "陳芯儀", "江韻荍", "夏仲文", "黃展悅"
+        ];
+        
+        // Status options
+        const statusOptions = [
+            { value: "yes", text: "Yes" },
+            { value: "abs", text: "Abs" },
+            { value: "o", text: "O" },
+            { value: "l", text: "L" },
+            { value: "s", text: "S" },
+            { value: "c", text: "C" }
+        ];
+        
+        // Generate attendance cards
+        function generateAttendanceCards(list, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            list.forEach((name, index) => {
+                const card = document.createElement('div');
+                card.className = 'attendance-card';
+                
+                const number = document.createElement('div');
+                number.className = 'player-number';
+                number.textContent = index + 1;
+                
+                const nameElement = document.createElement('div');
+                nameElement.className = 'player-name';
+                nameElement.textContent = name;
+                
+                const select = document.createElement('select');
+                select.className = 'status-select';
+                
+                // Add default option
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = '選擇狀態';
+                select.appendChild(defaultOption);
+                
+                // Add status options
+                statusOptions.forEach(option => {
+                    const opt = document.createElement('option');
+                    opt.value = option.value;
+                    opt.textContent = option.text;
+                    select.appendChild(opt);
+                });
+                
+                card.appendChild(number);
+                card.appendChild(nameElement);
+                card.appendChild(select);
+                container.appendChild(card);
+            });
+        }
+        
+        // Submit attendance function
+        function submitAttendance() {
+            const location = document.getElementById('location').value;
+            const coachCombination = document.getElementById('coach-combination').value;
+            
+            if (!location) {
+                alert('請選擇訓練地點');
+                return;
+            }
+            
+            if (!coachCombination) {
+                alert('請選擇教練組合');
+                return;
+            }
+            
+            // Collect attendance data
+            const attendanceData = {
+                location: document.getElementById('location').options[document.getElementById('location').selectedIndex].text,
+                coachCombination: document.getElementById('coach-combination').options[document.getElementById('coach-combination').selectedIndex].text,
+                athletes: [],
+                partners: []
+            };
+            
+            // Get athlete status
+            const athleteCards = document.querySelectorAll('#athletes-list .attendance-card');
+            athleteCards.forEach((card, index) => {
+                const name = card.querySelector('.player-name').textContent;
+                const status = card.querySelector('.status-select').value;
+                attendanceData.athletes.push({ number: index + 1, name, status });
+            });
+            
+            // Get partner status
+            const partnerCards = document.querySelectorAll('#partners-list .attendance-card');
+            partnerCards.forEach((card, index) => {
+                const name = card.querySelector('.player-name').textContent;
+                const status = card.querySelector('.status-select').value;
+                attendanceData.partners.push({ number: index + 14, name, status });
+            });
+            
+            // Here you would normally send data to server
+            // For this demo, we'll show an alert
+            alert('點名資料已提交！\n地點: ' + attendanceData.location + 
+                  '\n教練組合: ' + attendanceData.coachCombination);
+            
+            // Optionally, reset the form
+            // document.getElementById('attendance-form').reset();
+        }
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            generateAttendanceCards(athletes, 'athletes-list');
+            generateAttendanceCards(partners, 'partners-list');
+            
+            // Set today's date in header
+            const today = new Date();
+            const dateString = today.toLocaleDateString('zh-HK', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                weekday: 'long'
+            });
+            document.querySelector('header h1').insertAdjacentHTML('afterend', `<div class="subtitle">${dateString}</div>`);
+        });
+    </script>
+</body>
+</html>
